@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Load Data</title>
+  </head>
+  <body>
+    <a href="../menu/index.html">Go back to menu</a>
+    <h1>Load data from file</h1>
+
+    <form>
+      <div>
+        <label for="file">Choose data file (.txt file only): </label>
+        <input
+          type="file"
+          name="file"
+          id="file"
+          placeholder="yourfile.txt"
+          accept=".txt"
+        />
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+
+    <div>
+      <u>Your data:</u>
+      <div id="output"></div>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
