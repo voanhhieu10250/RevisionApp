@@ -4,9 +4,12 @@
   "description": "",
   "main": "./js/main.js",
   "scripts": {
-    "start": "electron . && tsc -w",
     "start:electron": "electron .",
     "start:ts": "tsc -w",
+    "start:ui": "vite",
+    "dev:ui": "vite",
+    "build:ui": "vite build",
+    "serve:ui": "vite preview",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "HieuVo",
@@ -14,10 +17,14 @@
   "devDependencies": {
     "@types/showdown": "^2.0.0",
     "electron": "^22.0.0",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.4",
+    "vite": "^4.0.3",
+    "vite-plugin-solid": "^2.5.0"
   },
   "dependencies": {
+    "@solidjs/router": "^0.6.0",
     "fast-xml-parser": "^4.0.12",
-    "showdown": "^2.1.0"
+    "showdown": "^2.1.0",
+    "solid-js": "^1.6.6"
   }
 }

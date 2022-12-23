@@ -9,7 +9,7 @@ form.addEventListener("submit", function (e) {
   let fr = new FileReader();
 
   fr.onload = async function () {
-    const dataObj = await window.electronAPI.toObj(fr.result);
+    const dataObj = await window.electronAPI.toObj(this.result);
     renderCards(dataObj);
     console.log(dataObj);
   };
