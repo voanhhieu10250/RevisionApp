@@ -4,12 +4,13 @@
   "description": "",
   "main": "./js/main.js",
   "scripts": {
+    "start": "yarn start:electron & yarn start:client",
     "start:electron": "electron .",
     "start:ts": "tsc -w",
-    "start:ui": "vite",
-    "dev:ui": "vite",
-    "build:ui": "vite build",
-    "serve:ui": "vite preview",
+    "start:client": "vite",
+    "dev:client": "vite",
+    "build:client": "vite build",
+    "serve:client": "vite preview",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "HieuVo",
