@@ -1,24 +1,32 @@
-import logo from "./logo.svg";
 import styles from "./App.module.scss";
 import { Component } from "solid-js";
+import { Routes, Route, A } from "@solidjs/router";
+import LoadDataPage from "./pages/LoadData";
+import MenuPage from "./pages/Menu";
+import EditDataPage from "./pages/EditData";
+import AppInfoPage from "./pages/AppInfo";
+import FlashCardsPage from "./pages/FlashCards";
 
 const App: Component = () => {
   return (
     <div class={styles.App}>
       <header class={styles.header}>
-        <img src={logo} class={styles.logo} alt="logo" />
-        <p>
-          Edit <code>src/App.jsx</code> and save to reload.
-        </p>
-        <a
-          class={styles.link}
-          href="https://github.com/solidjs/solid"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn Solid
-        </a>
+        <A href="/" class={styles.backToMenu}>
+          Back to menu
+        </A>
+        <h1>Revision App</h1>
       </header>
+      <Routes>
+        <Route path="/" component={MenuPage} />
+        <Route path="/load" component={LoadDataPage} />
+        <Route path="/edit" component={EditDataPage} />
+        <Route path="/info" component={AppInfoPage} />
+        <Route path="/flash-cards" component={FlashCardsPage} />
+        <Route
+          path="/about"
+          element={<div>This site was made with Solid</div>}
+        />
+      </Routes>
     </div>
   );
 };

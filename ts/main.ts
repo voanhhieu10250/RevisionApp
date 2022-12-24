@@ -4,7 +4,7 @@ import path from "path";
 
 app.whenReady().then(() => {
   const mainWindow = new MainWindow(
-    "index.html",
+    "dist/index.html",
     path.join(__dirname, "preload.js")
   );
 
