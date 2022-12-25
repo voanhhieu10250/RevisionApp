@@ -227,13 +227,26 @@ class HashTable<K, V> {
   }
 
   // convert hash table to array
-  public toArray(): HashNode<K, V>[] {
-    let list: HashNode<K, V>[] = [];
+  public toArray(elementAmount?: number): { key: K; value: V }[] {
+    let list: { key: K; value: V }[] = [];
 
-    for (let curNode of this.hashNodes) {
-      while (curNode != null) {
-        list.push(curNode);
-        curNode = curNode.next;
+    if (elementAmount) {
+      if (elementAmount > this._size) elementAmount = this._size;
+
+      for (let curNode of this.hashNodes) {
+        if (list.length >= elementAmount) break;
+
+        while (curNode != null && list.length < elementAmount) {
+          list.push({ key: curNode.key, value: curNode.val });
+          curNode = curNode.next;
+        }
+      }
+    } else {
+      for (let curNode of this.hashNodes) {
+        while (curNode != null) {
+          list.push({ key: curNode.key, value: curNode.val });
+          curNode = curNode.next;
+        }
       }
     }
     return list;

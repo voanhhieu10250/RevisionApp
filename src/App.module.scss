@@ -58,7 +58,7 @@
   display: flex;
   flex-direction: column;
   background-color: #0e0e0e;
-  flex-basis: 20%;
+  flex-basis: 15%;
   h4 {
     margin-top: 20px;
     margin-bottom: 0;
@@ -81,8 +81,8 @@
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (min-width: 768px) {
   .card {
-    flex-basis: 15%;
+    flex-basis: 20%;
   }
 }

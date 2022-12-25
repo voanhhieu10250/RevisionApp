@@ -45,46 +45,44 @@ export default function LoadDataPage() {
 
   return (
     <div>
-      <div>
-        <label for="file">Select a file: </label>
-        <br />
-        <input
-          type="file"
-          id="file"
-          name="file"
-          accept=".txt"
-          class={styles.fileInput}
-          onchange={handleFileSelect}
-        />
+      <label for="file">Select a file: </label>
+      <br />
+      <input
+        type="file"
+        id="file"
+        name="file"
+        accept=".txt"
+        class={styles.fileInput}
+        onchange={handleFileSelect}
+      />
 
-        <Show when={words().length > 0}>
-          <div class={styles.result}>
-            <h3>Your data:</h3>
+      <Show when={words().length > 0}>
+        <div class={styles.result}>
+          <h3>Your data:</h3>
 
-            <div>
-              <input
-                type="button"
-                value="Submit Data"
-                onClick={handleSubmitData}
-              />
-            </div>
-            <div class={styles.datas}>
-              <For each={words()}>
-                {(word, i) => (
-                  <div class={styles.card}>
-                    <h4>
-                      <b>{word.text}</b>
-                    </h4>
-                    <hr />
-                    <p>{word.definition}</p>
-                    <small>{i()}</small>
-                  </div>
-                )}
-              </For>
-            </div>
+          <div>
+            <input
+              type="button"
+              value="Submit Data"
+              onClick={handleSubmitData}
+            />
           </div>
-        </Show>
-      </div>
+          <div class={styles.datas}>
+            <For each={words()}>
+              {(word, i) => (
+                <div class={styles.card}>
+                  <h4>
+                    <b>{word.text}</b>
+                  </h4>
+                  <hr />
+                  <p>{word.definition}</p>
+                  <small>{i()}</small>
+                </div>
+              )}
+            </For>
+          </div>
+        </div>
+      </Show>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import HashTable from "../utils/HashTable";
 class MainWindow extends BrowserWindow {
   private _clientFilePath: string;
   private _data: HashTable<string, string>;
-  private _isChanged: boolean = false;
+  private _isDataChanged: boolean = false;
   private _keys: string[] = [];
   private _dataFilename: string = "";
 
@@ -22,6 +22,9 @@ class MainWindow extends BrowserWindow {
     this._data = new HashTable<string, string>();
 
     this.on("closed", () => app.quit());
+    this.on("resize", () =>
+      this.webContents.send("win:resize", this.getSize())
+    );
 
     this._loadEvents();
   }
@@ -44,6 +47,11 @@ class MainWindow extends BrowserWindow {
       filename: this._dataFilename,
       size: this._data.size,
     }));
+    ipcMain.handle("get:data", (_, perPage: number) =>
+      this._data
+        .toArray(perPage)
+        .map((x) => ({ text: x.key, definition: x.value } as Word))
+    );
   }
 
   _loadData(): void {}
