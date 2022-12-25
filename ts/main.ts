@@ -1,9 +1,9 @@
-import { app } from "electron";
+import { app, BrowserWindow } from "electron";
 import MainWindow from "./app/MainWindow";
 import path from "path";
 
 app.whenReady().then(() => {
-  const mainWindow = new MainWindow(
+  let mainWindow = new MainWindow(
     "dist/index.html",
     path.join(__dirname, "preload.js")
   );
@@ -12,6 +12,15 @@ app.whenReady().then(() => {
     mainWindow.removeMenu();
     // this.setResizable(false)
   }
+
+  app.on("activate", () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      mainWindow = new MainWindow(
+        "dist/index.html",
+        path.join(__dirname, "preload.js")
+      );
+    }
+  });
 });
 
 app.on("window-all-closed", function () {

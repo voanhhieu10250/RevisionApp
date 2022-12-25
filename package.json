@@ -4,8 +4,8 @@
   "description": "",
   "main": "./dist/main.js",
   "scripts": {
-    "start": "yarn start:electron & yarn start:client",
-    "start:electron": "electron . --trace-warnings",
+    "start": "tsc & vite build & electron . --trace-warnings",
+    "start:electron": "tsc & electron . --trace-warnings",
     "start:ts": "tsc -w",
     "build:ts": "tsc",
     "start:client": "vite",

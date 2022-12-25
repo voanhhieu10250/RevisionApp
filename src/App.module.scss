@@ -8,6 +8,7 @@
   font-size: 24px;
   color: white;
   min-height: 100vh;
+  min-width: 300px;
   padding: 0 30px;
 }
 
@@ -30,7 +31,7 @@
   padding: 0;
 }
 .fileInput {
-  font-size: 24px;
+  font-size: 18px;
 }
 
 .result {
@@ -57,7 +58,7 @@
   display: flex;
   flex-direction: column;
   background-color: #0e0e0e;
-  flex-basis: 10%;
+  flex-basis: 20%;
   h4 {
     margin-top: 20px;
     margin-bottom: 0;
@@ -78,4 +79,10 @@
 }
 .card:hover {
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+@media screen and (max-width: 600px) {
+  .card {
+    flex-basis: 15%;
+  }
 }

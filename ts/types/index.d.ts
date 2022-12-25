@@ -7,7 +7,11 @@ declare global {
 
   type ElectronAPI = {
     setTitle: (title: string) => void;
-    saveData: (data: Word[]) => Promise<boolean>;
+    saveData: (data: Word[], filename: string) => Promise<boolean>;
+    getDataInfo: () => Promise<{
+      filename: string;
+      size: number;
+    }>;
   };
   type Word = {
     text: string;

@@ -1,17 +1,20 @@
 import { useNavigate } from "@solidjs/router";
-import { createRenderEffect, createSignal, For, Show } from "solid-js";
+import { createSignal, For, onMount, Show } from "solid-js";
 import styles from "../App.module.scss";
 
 export default function LoadDataPage() {
   const [words, setWords] = createSignal<Word[]>([]);
+  const [filename, setFilename] = createSignal<string>("");
   const navigate = useNavigate();
 
-  createRenderEffect(() => {
+  onMount(() => {
     window.electronAPI.setTitle("Load your file!");
   });
 
   function handleFileSelect(evt: Event) {
     let file = (evt.target as HTMLInputElement).files![0];
+    console.log(file);
+
     let reader = new FileReader();
     reader.onload = function () {
       let text = reader.result as string;
@@ -27,13 +30,14 @@ export default function LoadDataPage() {
           });
 
         setWords(result);
+        setFilename(file.name);
       }
     };
     reader.readAsText(file);
   }
 
   async function handleSubmitData() {
-    const success = await window.electronAPI.saveData(words());
+    const success = await window.electronAPI.saveData(words(), filename());
     if (success) {
       navigate("/");
     }
