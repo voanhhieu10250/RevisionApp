@@ -9,6 +9,15 @@ import {
   onMount,
   Setter,
 } from "solid-js";
+import { Swiper, SwiperSlide } from "swiper/solid";
+import "swiper/css";
+
+const isButton = (element: HTMLElement) => {
+  let el: HTMLElement | null = element;
+  for (; el !== null && el.nodeName && !(el.nodeName === "BUTTON"); )
+    el = el.parentNode as HTMLElement | null;
+  return !!el;
+};
 
 const FlashCardsPage: Component = () => {
   const [words, setWords] = createSignal<
@@ -33,27 +42,19 @@ const FlashCardsPage: Component = () => {
     );
   });
 
-  function handleOnWheel(event: WheelEvent) {
-    event.preventDefault();
-
-    if (event.deltaY > 0) {
-      slider.scrollLeft += winWidth() / 2;
-    } else {
-      slider.scrollLeft -= winWidth() / 2;
-    }
-  }
+  const scrollWidth = () => winWidth() / 1.5;
 
   return (
     <div class={styles.container}>
       <h2>Flash Cards</h2>
       <div class={styles.slider}>
-        <div
-          class={styles.slides}
-          ref={(e) => (slider = e)}
-          onWheel={handleOnWheel}
-        >
+        <div class={styles.slides} ref={(e) => (slider = e)}>
           <For each={words()}>
             {(word, idx) => {
+              const handleFlip = (e: Event) => {
+                if (!isButton(e.target as HTMLElement))
+                  word.setShowDefi(!word.showDefi());
+              };
               return (
                 <div class={styles.flipCard}>
                   <div
@@ -61,6 +62,7 @@ const FlashCardsPage: Component = () => {
                       [styles.card]: true,
                       [styles.rotateCard]: word.showDefi(),
                     }}
+                    onClick={handleFlip}
                   >
                     <div class={styles.cardInnerFront}>
                       {/* card head */}
@@ -78,7 +80,7 @@ const FlashCardsPage: Component = () => {
                       <div class={styles.cardFooder}>
                         <button
                           onClick={() => {
-                            slider.scrollLeft -= winWidth() / 2;
+                            slider.scrollLeft -= scrollWidth();
                           }}
                         >
                           <img src={leftArrow} alt="Go back" />
@@ -92,7 +94,7 @@ const FlashCardsPage: Component = () => {
                         </button>
                         <button
                           onClick={() => {
-                            slider.scrollLeft += winWidth() / 2;
+                            slider.scrollLeft += scrollWidth();
                           }}
                         >
                           <img src={rightArrow} alt="Go next" />
@@ -116,7 +118,7 @@ const FlashCardsPage: Component = () => {
                       <div class={styles.cardFooder}>
                         <button
                           onClick={() => {
-                            slider.scrollLeft -= winWidth() / 2;
+                            slider.scrollLeft -= scrollWidth();
                           }}
                         >
                           <img src={leftArrow} alt="Go back" />
@@ -130,7 +132,7 @@ const FlashCardsPage: Component = () => {
                         </button>
                         <button
                           onClick={() => {
-                            slider.scrollLeft += winWidth() / 2;
+                            slider.scrollLeft += scrollWidth();
                           }}
                         >
                           <img src={rightArrow} alt="Go next" />
