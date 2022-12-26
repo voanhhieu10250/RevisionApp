@@ -5,5 +5,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
   saveData: (data: Word[], filename: string) =>
     ipcRenderer.invoke("submit:data", data, filename),
   getDataInfo: () => ipcRenderer.invoke("get:dataInfo"),
-  getData: (perPage: number) => ipcRenderer.invoke("get:data", perPage),
+  getData: (start?: number, perPage?: number) =>
+    ipcRenderer.invoke("get:data", start, perPage),
 } as ElectronAPI);

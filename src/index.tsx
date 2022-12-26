@@ -5,6 +5,7 @@ import { hashIntegration, Router } from "@solidjs/router";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/effect-creative";
+import "swiper/css/keyboard";
 import "./index.css";
 import App from "./App";
 

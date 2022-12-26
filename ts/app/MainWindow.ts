@@ -45,9 +45,9 @@ class MainWindow extends BrowserWindow {
       filename: this._dataFilename,
       size: this._data.size,
     }));
-    ipcMain.handle("get:data", (_, perPage: number) =>
+    ipcMain.handle("get:data", (_, start?: number, perPage?: number) =>
       this._data
-        .toArray(perPage)
+        .toArray(start, perPage)
         .map((x) => ({ text: x.key, definition: x.value } as Word))
     );
   }

@@ -1,18 +1,24 @@
-import { Accessor, Component, Setter } from "solid-js";
+import { Component } from "solid-js";
 import styles from "./Card.module.scss";
 import leftArrow from "../assets/left-arrow.svg";
 import rightArrow from "../assets/right-arrow.svg";
 
+export type CardType = Word & {
+  showDefi: boolean;
+  isForgot: boolean;
+  _id: number;
+};
 type CardProps = {
   handleFlip: (e: Event) => void;
   goNextCard: () => void;
   goPrevCard: () => void;
+  toggleForgotBtn: () => void;
   title: string;
-  word: Word & { showDefi: Accessor<boolean>; setShowDefi: Setter<boolean> };
+  word: CardType;
 };
-
 const Card: Component<CardProps> = ({
   handleFlip,
+  toggleForgotBtn,
   title,
   word,
   goNextCard,
@@ -23,7 +29,7 @@ const Card: Component<CardProps> = ({
       <div
         classList={{
           [styles.card]: true,
-          [styles.rotateCard]: word.showDefi(),
+          [styles.rotateCard]: word.showDefi,
         }}
         onClick={handleFlip}
       >
@@ -43,11 +49,10 @@ const Card: Component<CardProps> = ({
               <img src={leftArrow} alt="Go back" />
             </button>
             <button
-              onClick={() => {
-                word.setShowDefi(!word.showDefi());
-              }}
+              classList={{ [styles.forgotActive]: word.isForgot }}
+              onClick={toggleForgotBtn}
             >
-              I forgot this one
+              {word.isForgot ? "I remembered" : "I forgot this one"}
             </button>
             <button onClick={goNextCard}>
               <img src={rightArrow} alt="Go next" />
@@ -71,11 +76,10 @@ const Card: Component<CardProps> = ({
               <img src={leftArrow} alt="Go back" />
             </button>
             <button
-              onClick={() => {
-                word.setShowDefi(!word.showDefi());
-              }}
+              classList={{ [styles.forgotActive]: word.isForgot }}
+              onClick={toggleForgotBtn}
             >
-              I forgot this one
+              {word.isForgot ? "I remembered" : "I forgot this one"}
             </button>
             <button onClick={goNextCard}>
               <img src={rightArrow} alt="Go next" />

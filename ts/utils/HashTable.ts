@@ -227,8 +227,12 @@ class HashTable<K, V> {
   }
 
   // convert hash table to array
-  public toArray(elementAmount?: number): { key: K; value: V }[] {
+  public toArray(
+    startIndex?: number,
+    elementAmount?: number
+  ): { key: K; value: V }[] {
     let list: { key: K; value: V }[] = [];
+    let idxCounter = 0;
 
     if (elementAmount) {
       if (elementAmount > this._size) elementAmount = this._size;
@@ -237,15 +241,37 @@ class HashTable<K, V> {
         if (list.length >= elementAmount) break;
 
         while (curNode != null && list.length < elementAmount) {
-          list.push({ key: curNode.key, value: curNode.val });
-          curNode = curNode.next;
+          if (startIndex) {
+            if (idxCounter < startIndex) {
+              curNode = curNode.next;
+              idxCounter++;
+              continue;
+            }
+            list.push({ key: curNode.key, value: curNode.val });
+            curNode = curNode.next;
+            idxCounter++;
+          } else {
+            list.push({ key: curNode.key, value: curNode.val });
+            curNode = curNode.next;
+          }
         }
       }
     } else {
       for (let curNode of this.hashNodes) {
         while (curNode != null) {
-          list.push({ key: curNode.key, value: curNode.val });
-          curNode = curNode.next;
+          if (startIndex) {
+            if (idxCounter < startIndex) {
+              curNode = curNode.next;
+              idxCounter++;
+              continue;
+            }
+            list.push({ key: curNode.key, value: curNode.val });
+            curNode = curNode.next;
+            idxCounter++;
+          } else {
+            list.push({ key: curNode.key, value: curNode.val });
+            curNode = curNode.next;
+          }
         }
       }
     }

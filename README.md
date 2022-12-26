@@ -3,6 +3,7 @@
 - Use fast-xml-parser for parsing html
 - Add an array in mainWindow to store keys of the data when adding data to the hash table.
 - Keep things simple. Just build this app like the java app that I have built.
+- Use showdown for the card's body. So that user can decide the size of the text
 
 ## Start
 

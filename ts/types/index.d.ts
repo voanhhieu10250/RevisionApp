@@ -12,7 +12,7 @@ declare global {
       filename: string;
       size: number;
     }>;
-    getData: (perPage: number) => Promise<Word[]>;
+    getData: (start?: number, perPage?: number) => Promise<Word[]>;
   };
   type Word = {
     text: string;
