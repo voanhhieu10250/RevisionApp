@@ -13,6 +13,7 @@ import type { Swiper as SwiperRef } from "swiper";
 import { Navigation, EffectCreative, Keyboard } from "swiper";
 import Card from "../components/Card";
 import type { CardType } from "../components/Card";
+import { A } from "@solidjs/router";
 
 const isButton = (element: HTMLElement) => {
   let el: HTMLElement | null = element;
@@ -46,11 +47,6 @@ const FlashCardsPage: Component = () => {
   createEffect(() => {
     if (swiper()) {
       swiper()?.on("slideChange", () => {
-        console.log(
-          swiper()?.activeIndex,
-          swiper()?.isBeginning,
-          swiper()?.isEnd
-        );
         if (swiper()?.isEnd) setIsLastSlide(true);
         else setIsLastSlide(false);
       });
@@ -244,7 +240,16 @@ const FlashCardsPage: Component = () => {
                   Remove all forgotten cards
                 </button>
               </Show>
-              <button onClick={handleNextRound}>Next round</button>
+              <Show
+                when={words.length !== dbSize()}
+                fallback={
+                  <A href="/" style={{ color: "#b318f0" }}>
+                    Back to menu
+                  </A>
+                }
+              >
+                <button onClick={handleNextRound}>Next round</button>
+              </Show>
             </div>
           </div>
         </Show>

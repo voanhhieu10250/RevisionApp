@@ -87,7 +87,7 @@
     margin: 5px;
 
     button {
-      font-size: 18px;
+      font-size: 15px;
       width: 32%;
       display: flex;
       justify-content: center;
@@ -115,7 +115,15 @@
     visibility: hidden;
   }
 }
-
+@media screen and (min-width: 768px) {
+  .card {
+    .cardFooder {
+      button {
+        font-size: 18px;
+      }
+    }
+  }
+}
 @media screen and (min-width: 1280px) {
   .card {
     height: 70%;
