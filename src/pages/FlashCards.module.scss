@@ -10,120 +10,6 @@
     margin: 20px 0 0;
   }
 }
-.flipCard {
-  background-color: transparent;
-  width: 100%;
-  flex: auto;
-  perspective: 1000px;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.card {
-  position: relative;
-  height: 90%;
-  width: 90%;
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
-
-  background-color: #0e0e0e;
-  border-radius: 10px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-
-  .cardInnerFront,
-  .cardInnerBack {
-    position: absolute;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    padding: 20px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    // 40px is the padding of .card, we need to minus it to get the real width
-    // that is equal to the width of .slider
-    width: calc(100% - 40px);
-    height: calc(100% - 40px);
-  }
-
-  .cardInnerBack {
-    transform: rotateX(180deg);
-    .cardHeader {
-      visibility: hidden;
-    }
-  }
-  .cardHeader {
-    text-align: center;
-    font-size: 20px;
-    position: relative;
-    width: 100%;
-    transform: visibility 0.6s;
-
-    small {
-      display: block;
-    }
-
-    .edit {
-      position: absolute;
-      right: 0;
-      top: 0;
-      color: #ffffff;
-      outline: none;
-      background-color: inherit;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-    }
-  }
-
-  .cardBody {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex: auto;
-    width: 100%;
-    margin: 10px 5px;
-    font-size: 50px;
-  }
-  .cardFooder {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-    margin: 5px;
-
-    button {
-      font-size: 18px;
-      width: 32%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 7px;
-      border-radius: 10px;
-      cursor: pointer;
-
-      img {
-        display: block;
-        width: 18px;
-      }
-    }
-  }
-}
-.rotateCard {
-  transform: rotateX(180deg);
-  .cardInnerBack .cardHeader {
-    visibility: visible;
-  }
-  .cardInnerFront .cardHeader {
-    visibility: hidden;
-  }
-}
 
 .slider {
   width: 100%;
@@ -137,51 +23,25 @@
     left: 0;
     width: 100%;
     height: 100%;
-    display: flex;
-    column-gap: 30px; // 30px is the App padding (App.module.scss)
-    overflow-x: hidden;
-    scroll-snap-type: x mandatory;
+  }
 
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-
-    > div {
-      scroll-snap-align: start;
-      flex-shrink: 0;
-      transform-origin: center center;
-      transform: scale(1);
-      transition: transform 0.5s;
-      position: relative;
-    }
-  }
-  .slides::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-  }
-  .slides::-webkit-scrollbar-thumb {
-    background: black;
-    border-radius: 10px;
-  }
-  .slides::-webkit-scrollbar-track {
-    background: transparent;
-  }
+  // .slides::-webkit-scrollbar {
+  //   width: 10px;
+  //   height: 10px;
+  // }
+  // .slides::-webkit-scrollbar-thumb {
+  //   background: black;
+  //   border-radius: 10px;
+  // }
+  // .slides::-webkit-scrollbar-track {
+  //   background: transparent;
+  // }
 }
 
 @media screen and (min-width: 1280px) {
   .container {
     > h2 {
       margin: 20px 0;
-    }
-  }
-  .card {
-    height: 70%;
-    width: 70%;
-    max-width: 1200px;
-    max-height: 1000px;
-    .cardFooder {
-      button {
-        font-size: 23px;
-      }
     }
   }
 }

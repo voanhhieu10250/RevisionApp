@@ -13,9 +13,6 @@ declare global {
       size: number;
     }>;
     getData: (perPage: number) => Promise<Word[]>;
-    handleWinResize: (
-      callback: (event: IpcRendererEvent, size: [number, number]) => void
-    ) => void;
   };
   type Word = {
     text: string;

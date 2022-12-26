@@ -23,9 +23,6 @@ class MainWindow extends BrowserWindow {
     this._data = new HashTable<string, string>();
 
     this.on("closed", () => app.quit());
-    this.on("resize", () =>
-      this.webContents.send("win:resize", this.getSize())
-    );
 
     this._loadEvents();
   }

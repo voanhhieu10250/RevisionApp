@@ -1,6 +1,4 @@
 import styles from "./FlashCards.module.scss";
-import leftArrow from "../assets/left-arrow.svg";
-import rightArrow from "../assets/right-arrow.svg";
 import {
   Accessor,
   Component,
@@ -10,7 +8,9 @@ import {
   Setter,
 } from "solid-js";
 import { Swiper, SwiperSlide } from "swiper/solid";
-import "swiper/css";
+import type { Swiper as SwiperRef } from "swiper";
+import { Navigation, EffectCreative } from "swiper";
+import Card from "../components/Card";
 
 const isButton = (element: HTMLElement) => {
   let el: HTMLElement | null = element;
@@ -23,15 +23,11 @@ const FlashCardsPage: Component = () => {
   const [words, setWords] = createSignal<
     (Word & { showDefi: Accessor<boolean>; setShowDefi: Setter<boolean> })[]
   >([]);
-  const [winWidth, setWinWidth] = createSignal<number>(window.innerWidth);
+  const [swiper, setSwiper] = createSignal<SwiperRef | null>(null);
   let slider: HTMLDivElement;
 
   onMount(async () => {
     window.electronAPI.setTitle("Flash Cards");
-    window.electronAPI.handleWinResize((_, size) => {
-      setWinWidth(size[0]);
-    });
-
     const result = await window.electronAPI.getData(20);
 
     setWords(
@@ -41,109 +37,61 @@ const FlashCardsPage: Component = () => {
       })
     );
   });
-
-  const scrollWidth = () => winWidth() / 1.5;
+  const goNextCard = () => {
+    swiper()?.slideNext();
+  };
+  const goPrevCard = () => {
+    swiper()?.slidePrev();
+  };
 
   return (
     <div class={styles.container}>
       <h2>Flash Cards</h2>
       <div class={styles.slider}>
         <div class={styles.slides} ref={(e) => (slider = e)}>
-          <For each={words()}>
-            {(word, idx) => {
-              const handleFlip = (e: Event) => {
-                if (!isButton(e.target as HTMLElement))
-                  word.setShowDefi(!word.showDefi());
-              };
-              return (
-                <div class={styles.flipCard}>
-                  <div
-                    classList={{
-                      [styles.card]: true,
-                      [styles.rotateCard]: word.showDefi(),
-                    }}
-                    onClick={handleFlip}
-                  >
-                    <div class={styles.cardInnerFront}>
-                      {/* card head */}
-                      <div class={styles.cardHeader}>
-                        <small>
-                          {idx() + 1}/{words().length}
-                        </small>
-                        <button class={styles.edit}>Edit</button>
-                      </div>
-                      {/* card body */}
-                      <div class={styles.cardBody}>
-                        <p>{word.text}</p>
-                      </div>
-                      {/* card food */}
-                      <div class={styles.cardFooder}>
-                        <button
-                          onClick={() => {
-                            slider.scrollLeft -= scrollWidth();
-                          }}
-                        >
-                          <img src={leftArrow} alt="Go back" />
-                        </button>
-                        <button
-                          onClick={() => {
-                            word.setShowDefi(!word.showDefi());
-                          }}
-                        >
-                          I forgot this one
-                        </button>
-                        <button
-                          onClick={() => {
-                            slider.scrollLeft += scrollWidth();
-                          }}
-                        >
-                          <img src={rightArrow} alt="Go next" />
-                        </button>
-                      </div>
-                    </div>
-
-                    <div class={styles.cardInnerBack}>
-                      {/* card head */}
-                      <div class={styles.cardHeader}>
-                        <small>
-                          {idx() + 1}/{words().length}
-                        </small>
-                        <button class={styles.edit}>Edit</button>
-                      </div>
-                      {/* card body */}
-                      <div class={styles.cardBody}>
-                        <p>{word.definition}</p>
-                      </div>
-                      {/* card food */}
-                      <div class={styles.cardFooder}>
-                        <button
-                          onClick={() => {
-                            slider.scrollLeft -= scrollWidth();
-                          }}
-                        >
-                          <img src={leftArrow} alt="Go back" />
-                        </button>
-                        <button
-                          onClick={() => {
-                            word.setShowDefi(!word.showDefi());
-                          }}
-                        >
-                          I forgot this one
-                        </button>
-                        <button
-                          onClick={() => {
-                            slider.scrollLeft += scrollWidth();
-                          }}
-                        >
-                          <img src={rightArrow} alt="Go next" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
+          <Swiper
+            modules={[Navigation, EffectCreative]}
+            navigation={{
+              prevEl: null,
+              nextEl: null,
             }}
-          </For>
+            grabCursor={true}
+            effect="creative"
+            creativeEffect={{
+              prev: {
+                translate: ["-120%", 0, -500],
+              },
+              next: {
+                translate: ["120%", 0, -500],
+              },
+            }}
+            speed={500}
+            spaceBetween={30}
+            slidesPerView={1}
+            onSlideChange={() => console.log("slide change")}
+            onSwiper={(swiper) => setSwiper(swiper)}
+          >
+            <For each={words()}>
+              {(word, idx) => {
+                const handleFlip = (e: Event) => {
+                  if (!isButton(e.target as HTMLElement))
+                    word.setShowDefi(!word.showDefi());
+                };
+                return (
+                  <SwiperSlide>
+                    <Card
+                      word={word}
+                      title={`${idx() + 1}/${words().length}`}
+                      handleFlip={handleFlip}
+                      goNextCard={goNextCard}
+                      goPrevCard={goPrevCard}
+                    />
+                  </SwiperSlide>
+                );
+              }}
+            </For>
+            );
+          </Swiper>
         </div>
       </div>
     </div>
