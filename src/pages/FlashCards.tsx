@@ -1,9 +1,11 @@
 import styles from "./FlashCards.module.scss";
 import {
+  batch,
   Component,
   createEffect,
   createSignal,
   For,
+  on,
   onMount,
   Show,
 } from "solid-js";
@@ -17,6 +19,14 @@ import { A } from "@solidjs/router";
 
 const isButton = (element: HTMLElement) => {
   let el: HTMLElement | null = element;
+  if (el.hasChildNodes()) {
+    for (let i = 0; i < el.childNodes.length; i++) {
+      const child = el.childNodes[i];
+      if (child.nodeName === "BUTTON") {
+        return false;
+      }
+    }
+  }
   for (; el !== null && el.nodeName && !(el.nodeName === "BUTTON"); )
     el = el.parentNode as HTMLElement | null;
   return !!el;
@@ -27,57 +37,52 @@ const FlashCardsPage: Component = () => {
   const [cardsPerRound, setCardsPerRound] = createSignal<number>(20);
   const [words, setWords] = createStore<CardType[]>([]);
   const [swiper, setSwiper] = createSignal<SwiperRef | null>(null);
-  const [isLastSlide, setIsLastSlide] = createSignal<boolean>(false);
   const [showResult, setShowResult] = createSignal<boolean>(false);
-  const [forgotWords, setForgotWords] = createStore<CardType[]>([]);
   const [isShowForgot, setIsShowForgot] = createSignal<boolean>(false);
+  const [forgotIndexes, setForgotIndexes] = createSignal<number[]>([]);
 
   onMount(async () => {
     window.electronAPI.setTitle("Flash Cards");
     let infodata = await window.electronAPI.getDataInfo();
-    setDbSize(infodata.size);
     const result = await window.electronAPI.getData(undefined, cardsPerRound());
-    setWords(
-      result.map((word, idx) => {
-        return { ...word, showDefi: false, isForgot: false, _id: idx };
-      })
-    );
+    batch(() => {
+      setDbSize(infodata.size);
+      setWords(
+        result.map((word, idx) => {
+          return { ...word, showDefi: false, isForgot: false, _id: idx };
+        })
+      );
+    });
   });
 
-  createEffect(() => {
-    if (swiper()) {
-      swiper()?.on("slideChange", () => {
-        if (swiper()?.isEnd) setIsLastSlide(true);
-        else setIsLastSlide(false);
-      });
-      swiper()?.on("keyPress", (_, keyCode) => {
-        if (isLastSlide() && parseInt(keyCode) === 39) {
+  createEffect(
+    on(swiper, (swiper) => {
+      // Swiper events only work after swiper is initialized
+      // If you want to use swiper events, you need to use createEffect
+      swiper?.on("keyPress", (s, keyCode) => {
+        if (s.isEnd && parseInt(keyCode) === 39) {
           setIsShowForgot(false);
           setShowResult(true);
         }
       });
-    }
-  });
+    })
+  );
 
   // Update forgotWords when words change
-  createEffect(() => {
-    if (!isShowForgot()) {
-      setForgotWords(
-        words
-          .filter((word) => word.isForgot)
-          .map((w) => ({ ...w, showDefi: false }))
-      );
-    }
-  });
-
-  // Update words when forgotWords change
-  createEffect(() => {
-    if (forgotWords.length > 0 && isShowForgot())
-      setWords(
-        forgotWords.filter((word) => !word.isForgot).map((word) => word._id),
-        (word) => ({ ...word, isForgot: false, showDefi: false })
-      );
-  });
+  createEffect(
+    on(
+      isShowForgot,
+      (isShowForgot) => {
+        // console.log("words change");
+        if (!isShowForgot) {
+          setForgotIndexes(
+            forgotIndexes().filter((idx) => words[idx].isForgot)
+          );
+        }
+      },
+      { defer: true }
+    )
+  );
 
   // setForgotWords(forgotWords.filter((word) => word.isForgot));
   const handleCardPerRoundChange = async (e: Event) => {
@@ -85,60 +90,86 @@ const FlashCardsPage: Component = () => {
     const value = target.value === "full" ? undefined : parseInt(target.value);
     const result = await window.electronAPI.getData(undefined, value);
 
-    setIsLastSlide(false);
-    setCardsPerRound(value ?? dbSize());
-    setWords(
-      result.map((word, idx) => {
-        return { ...word, showDefi: false, isForgot: false, _id: idx };
-      })
-    );
+    batch(() => {
+      setCardsPerRound(value ?? dbSize());
+      setWords(
+        result.map((word, idx) => {
+          return { ...word, showDefi: false, isForgot: false, _id: idx };
+        })
+      );
+    });
     swiper()?.update();
   };
 
   const goNextCard = () => {
     swiper()?.slideNext();
     if (swiper()?.isEnd) {
-      setIsShowForgot(false);
-      setShowResult(true);
+      batch(() => {
+        setIsShowForgot(false);
+        setShowResult(true);
+      });
     }
   };
   const goPrevCard = () => {
     swiper()?.slidePrev();
   };
   const handleReviewForgot = () => {
-    setIsLastSlide(false);
-    setShowResult(false);
-    setIsShowForgot(true);
-    swiper()?.slideTo(0);
+    batch(() => {
+      setShowResult(false);
+      setIsShowForgot(true);
+      setWords(forgotIndexes(), "showDefi", false);
+    });
+    swiper()?.update();
+    swiper()?.slideTo(0, 0);
   };
   const handleNextRound = async () => {
     let oldLength = words.length;
     let tempId = words.length;
-    setIsLastSlide(false);
-    setShowResult(false);
-    setIsShowForgot(false);
     const result = await window.electronAPI.getData(
       words.length,
       cardsPerRound()
     );
-    setWords([
-      ...words,
-      ...result.map((word) => {
-        return { ...word, showDefi: false, isForgot: false, _id: tempId++ };
-      }),
-    ]);
+    batch(() => {
+      setShowResult(false);
+      setIsShowForgot(false);
+      setWords([
+        ...words,
+        ...result.map((word) => {
+          return { ...word, showDefi: false, isForgot: false, _id: tempId++ };
+        }),
+      ]);
+    });
     swiper()?.update();
-    swiper()?.slideTo(oldLength);
+    swiper()?.slideTo(oldLength, 0);
   };
   const handleRemoveForgotCards = () => {
-    setWords(
-      forgotWords.map((word) => word._id),
-      (word) => ({ ...word, isForgot: false, showDefi: false })
-    );
-    setForgotWords([]);
+    batch(() => {
+      setWords(forgotIndexes(), {
+        isForgot: false,
+        showDefi: false,
+      });
+      setForgotIndexes([]);
+    });
+  };
+  const handleFlip = (word: CardType, e: Event) => {
+    if (!isButton(e.target as HTMLElement)) {
+      setWords([word._id], "showDefi", (showDefi) => !showDefi);
+    }
+  };
+  const toggleForgotBtn = (word: CardType) => {
+    batch(() => {
+      if (!isShowForgot()) {
+        if (!word.isForgot && !forgotIndexes().includes(word._id))
+          setForgotIndexes([...forgotIndexes(), word._id]);
+        if (word.isForgot && forgotIndexes().includes(word._id))
+          setForgotIndexes(forgotIndexes().filter((idx) => idx !== word._id));
+      }
+      setWords([word._id], "isForgot", (isForgot) => !isForgot);
+    });
   };
 
-  const list = () => (isShowForgot() ? forgotWords : words);
+  const list = () =>
+    !isShowForgot() ? words : forgotIndexes().map((idx) => words[idx]);
 
   return (
     <div class={styles.container}>
@@ -170,10 +201,6 @@ const FlashCardsPage: Component = () => {
                 prevEl: null,
                 nextEl: null,
               }}
-              onBeforeSlideChangeStart={(s) => {
-                if (s.isEnd) setIsLastSlide(true);
-              }}
-              grabCursor={true}
               effect="creative"
               creativeEffect={{
                 prev: {
@@ -187,29 +214,16 @@ const FlashCardsPage: Component = () => {
               allowTouchMove={false}
               spaceBetween={30}
               slidesPerView={1}
-              onSlideChange={() => console.log("slide change")}
               onSwiper={(swiper) => setSwiper(swiper)}
             >
               <For each={list()}>
                 {(word, idx) => {
-                  const handleFlip = (e: Event) => {
-                    if (!isButton(e.target as HTMLElement)) {
-                      if (isShowForgot())
-                        setForgotWords([idx()], "showDefi", !word.showDefi);
-                      else setWords([idx()], "showDefi", !word.showDefi);
-                    }
-                  };
-                  const toggleForgotBtn = () => {
-                    if (isShowForgot())
-                      setForgotWords([idx()], "isForgot", !word.isForgot);
-                    else setWords([idx()], "isForgot", !word.isForgot);
-                  };
                   return (
                     <SwiperSlide>
                       <Card
                         word={word}
                         title={`${idx() + 1}/${
-                          isShowForgot() ? forgotWords.length : dbSize()
+                          isShowForgot() ? forgotIndexes().length : dbSize()
                         }`}
                         handleFlip={handleFlip}
                         toggleForgotBtn={toggleForgotBtn}
@@ -228,10 +242,15 @@ const FlashCardsPage: Component = () => {
           <div class={styles.endRound}>
             <div class={styles.modal}>
               <h3>End of round</h3>
-              <p>Words you forgot: {forgotWords.length} words</p>
-              <Show when={forgotWords.length > 0}>
+              <p>Words saved for review: {forgotIndexes().length} words</p>
+              <Show
+                when={forgotIndexes().length > 0}
+                fallback={<p>Good Job!</p>}
+              >
                 <ul>
-                  <For each={forgotWords}>{(word) => <li>{word.text}</li>}</For>
+                  <For each={forgotIndexes()}>
+                    {(id) => <li>{words[id].text}</li>}
+                  </For>
                 </ul>
                 <button onClick={handleReviewForgot}>
                   Review forgotten cards

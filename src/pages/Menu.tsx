@@ -31,13 +31,13 @@ export default function MenuPage() {
           </A>
         </li>
         <li>
-          <A href="/edit" class={styles.link}>
-            Edit Data
+          <A href="/flash-cards" class={styles.link}>
+            Flash Cards
           </A>
         </li>
         <li>
-          <A href="/flash-cards" class={styles.link}>
-            Flash Cards
+          <A href="/edit" class={styles.link}>
+            Edit Data
           </A>
         </li>
         <li>

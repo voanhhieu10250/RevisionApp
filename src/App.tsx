@@ -8,15 +8,18 @@ import AppInfoPage from "./pages/AppInfo";
 import FlashCardsPage from "./pages/FlashCards";
 
 const App: Component = () => {
-  const match = useMatch(() => "/flash-cards");
+  const isFlashCard = useMatch(() => "/flash-cards");
+  const isMenu = useMatch(() => "/");
 
   return (
     <div class={styles.App}>
       <header class={styles.header}>
-        <A href="/" class={styles.backToMenu}>
-          Back to menu
-        </A>
-        <Show when={!Boolean(match())}>
+        <Show when={!Boolean(isMenu())}>
+          <A href="/" class={styles.backToMenu}>
+            Back to menu
+          </A>
+        </Show>
+        <Show when={!Boolean(isFlashCard())}>
           <h1>Revision App</h1>
         </Show>
       </header>

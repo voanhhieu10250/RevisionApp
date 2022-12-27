@@ -44,6 +44,9 @@
     .cardHeader {
       visibility: hidden;
     }
+    * {
+      pointer-events: none;
+    }
   }
   .cardHeader {
     text-align: center;
@@ -100,6 +103,9 @@
         display: block;
         width: 18px;
       }
+      * {
+        pointer-events: none;
+      }
     }
     .forgotActive {
       color: #9c015b;
@@ -108,11 +114,21 @@
 }
 .rotateCard {
   transform: rotateX(180deg);
-  .cardInnerBack .cardHeader {
-    visibility: visible;
+  .cardInnerBack {
+    .cardHeader {
+      visibility: visible;
+    }
+    * {
+      pointer-events: auto;
+    }
   }
-  .cardInnerFront .cardHeader {
-    visibility: hidden;
+  .cardInnerFront {
+    .cardHeader {
+      visibility: hidden;
+    }
+    * {
+      pointer-events: none;
+    }
   }
 }
 @media screen and (min-width: 768px) {

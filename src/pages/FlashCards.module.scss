@@ -62,8 +62,9 @@
       border-radius: 10px;
       box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
       position: relative;
+      padding: 0 30px;
       height: 90%;
-      width: 90%;
+      width: calc(90% - 60px);
       text-align: start;
     }
   }
@@ -85,6 +86,12 @@
   .model {
     height: 70%;
     width: 70%;
+    max-width: 1200px;
+    max-height: 1000px;
+  }
+  .slider .endRound .modal {
+    height: 70%;
+    width: calc(70% - 60px);
     max-width: 1200px;
     max-height: 1000px;
   }
