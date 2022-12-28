@@ -1,11 +1,14 @@
 import { useNavigate } from "@solidjs/router";
 import { createSignal, For, onMount, Show } from "solid-js";
-import styles from "../App.module.scss";
+import styles from "./LoadData.module.scss";
 
 export default function LoadDataPage() {
   const [words, setWords] = createSignal<Word[]>([]);
   const [filename, setFilename] = createSignal<string>("");
+  const [filePath, setFilePath] = createSignal<string>("");
+  const [progress, setProgress] = createSignal<number>(0);
   const navigate = useNavigate();
+  let fileInput: HTMLInputElement;
 
   onMount(() => {
     window.electronAPI.setTitle("Load your file!");
@@ -13,11 +16,17 @@ export default function LoadDataPage() {
 
   function handleFileSelect(evt: Event) {
     let file = (evt.target as HTMLInputElement).files![0];
-    console.log(file);
-
     let reader = new FileReader();
-    reader.onload = function () {
-      let text = reader.result as string;
+
+    console.log(file);
+    reader.onprogress = function (this: FileReader, evt: ProgressEvent) {
+      if (evt.lengthComputable) {
+        let percentComplete = (evt.loaded / evt.total) * 100;
+        setProgress(percentComplete);
+      }
+    };
+    reader.onload = function (this: FileReader): void {
+      let text = this.result as string;
       let result: { text: string; definition: string }[] = [];
 
       if (text) {
@@ -31,13 +40,18 @@ export default function LoadDataPage() {
 
         setWords(result);
         setFilename(file.name);
+        setFilePath((file as File & { path: string }).path || "");
       }
     };
     reader.readAsText(file);
   }
 
   async function handleSubmitData() {
-    const success = await window.electronAPI.saveData(words(), filename());
+    const success = await window.electronAPI.saveData(
+      words(),
+      filename(),
+      filePath()
+    );
     if (success) {
       navigate("/");
     }
@@ -45,16 +59,29 @@ export default function LoadDataPage() {
 
   return (
     <div>
-      <label for="file">Select a file: </label>
-      <br />
-      <input
-        type="file"
-        id="file"
-        name="file"
-        accept=".txt"
-        class={styles.fileInput}
-        onchange={handleFileSelect}
-      />
+      <form>
+        <div class={styles.inputFileContainer}>
+          <input
+            ref={(e) => (fileInput = e)}
+            class={styles.inputFile}
+            id="data-file"
+            type="file"
+            accept=".txt"
+            onChange={handleFileSelect}
+          />
+          <label
+            tabindex="0"
+            for="data-file"
+            class={styles.inputFileTrigger}
+            onClick={() => fileInput.focus()}
+          >
+            Select a file...
+          </label>
+        </div>
+        <p class={styles.fileReturn}>
+          {filePath() ? filePath() : progress() + "%"}
+        </p>
+      </form>
 
       <Show when={words().length > 0}>
         <div class={styles.result}>

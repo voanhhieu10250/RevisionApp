@@ -31,7 +31,12 @@ const isButton = (element: HTMLElement) => {
     el = el.parentNode as HTMLElement | null;
   return !!el;
 };
-
+function shuffleArray(array: any[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
 const FlashCardsPage: Component = () => {
   const [dbSize, setDbSize] = createSignal(0);
   const [cardsPerRound, setCardsPerRound] = createSignal<number>(20);
@@ -40,18 +45,21 @@ const FlashCardsPage: Component = () => {
   const [showResult, setShowResult] = createSignal<boolean>(false);
   const [isShowForgot, setIsShowForgot] = createSignal<boolean>(false);
   const [forgotIndexes, setForgotIndexes] = createSignal<number[]>([]);
+  const [shuffle, setShuffle] = createSignal<boolean>(true);
 
   onMount(async () => {
     window.electronAPI.setTitle("Flash Cards");
     let infodata = await window.electronAPI.getDataInfo();
-    const result = await window.electronAPI.getData(undefined, cardsPerRound());
+    const result = await window.electronAPI.getData(
+      undefined,
+      cardsPerRound(),
+      { showDefi: false, isForgot: false }
+    );
+    if (shuffle()) shuffleArray(result);
+
     batch(() => {
       setDbSize(infodata.size);
-      setWords(
-        result.map((word, idx) => {
-          return { ...word, showDefi: false, isForgot: false, _id: idx };
-        })
-      );
+      setWords(result as CardType[]);
     });
   });
 
@@ -84,19 +92,38 @@ const FlashCardsPage: Component = () => {
     )
   );
 
-  // setForgotWords(forgotWords.filter((word) => word.isForgot));
+  createEffect(
+    on(
+      shuffle,
+      async (isShuffle) => {
+        const result = await window.electronAPI.getData(
+          undefined,
+          words.length,
+          { showDefi: false, isForgot: false }
+        );
+
+        if (isShuffle) shuffleArray(result);
+
+        setWords(result as CardType[]);
+        swiper()?.update();
+        // swiper()?.slideTo(0, 0);
+      },
+      { defer: true }
+    )
+  );
+
   const handleCardPerRoundChange = async (e: Event) => {
     const target = e.target as HTMLSelectElement;
     const value = target.value === "full" ? undefined : parseInt(target.value);
-    const result = await window.electronAPI.getData(undefined, value);
+    const result = await window.electronAPI.getData(undefined, value, {
+      showDefi: false,
+      isForgot: false,
+    });
+    if (shuffle()) shuffleArray(result);
 
     batch(() => {
       setCardsPerRound(value ?? dbSize());
-      setWords(
-        result.map((word, idx) => {
-          return { ...word, showDefi: false, isForgot: false, _id: idx };
-        })
-      );
+      setWords(result as CardType[]);
     });
     swiper()?.update();
   };
@@ -124,20 +151,17 @@ const FlashCardsPage: Component = () => {
   };
   const handleNextRound = async () => {
     let oldLength = words.length;
-    let tempId = words.length;
     const result = await window.electronAPI.getData(
       words.length,
-      cardsPerRound()
+      cardsPerRound(),
+      { showDefi: false, isForgot: false }
     );
+    if (shuffle()) shuffleArray(result);
+
     batch(() => {
       setShowResult(false);
       setIsShowForgot(false);
-      setWords([
-        ...words,
-        ...result.map((word) => {
-          return { ...word, showDefi: false, isForgot: false, _id: tempId++ };
-        }),
-      ]);
+      setWords([...words, ...(result as CardType[])]);
     });
     swiper()?.update();
     swiper()?.slideTo(oldLength, 0);
@@ -151,21 +175,38 @@ const FlashCardsPage: Component = () => {
       setForgotIndexes([]);
     });
   };
-  const handleFlip = (word: CardType, e: Event) => {
+  const handleFlip = (id: number, e: Event) => {
     if (!isButton(e.target as HTMLElement)) {
-      setWords([word._id], "showDefi", (showDefi) => !showDefi);
+      setWords([id], "showDefi", (showDefi) => !showDefi);
     }
   };
-  const toggleForgotBtn = (word: CardType) => {
+  const toggleForgotBtn = (id: number, _: Event) => {
     batch(() => {
       if (!isShowForgot()) {
-        if (!word.isForgot && !forgotIndexes().includes(word._id))
-          setForgotIndexes([...forgotIndexes(), word._id]);
-        if (word.isForgot && forgotIndexes().includes(word._id))
-          setForgotIndexes(forgotIndexes().filter((idx) => idx !== word._id));
+        if (!words[id].isForgot && !forgotIndexes().includes(id))
+          setForgotIndexes([...forgotIndexes(), id]);
+        if (words[id].isForgot && forgotIndexes().includes(id))
+          setForgotIndexes(forgotIndexes().filter((idx) => idx !== id));
       }
-      setWords([word._id], "isForgot", (isForgot) => !isForgot);
+      setWords([id], "isForgot", (isForgot) => !isForgot);
     });
+  };
+  const toggleShuffle = (t: Event) => {
+    if (words.length >= 400) {
+      if (
+        confirm(
+          "This function is expensive on this amount of cards. Are you sure?"
+        )
+      ) {
+        (t.target as HTMLInputElement).checked = !shuffle();
+        setShuffle((val) => !val);
+      } else {
+        (t.target as HTMLInputElement).checked = shuffle();
+      }
+    } else {
+      (t.target as HTMLInputElement).checked = !shuffle();
+      setShuffle((val) => !val);
+    }
   };
 
   const list = () =>
@@ -173,7 +214,27 @@ const FlashCardsPage: Component = () => {
 
   return (
     <div class={styles.container}>
-      <h2>Flash Cards (round {Math.round(words.length / cardsPerRound())})</h2>
+      <div class={styles.shuffle}>
+        <input
+          type="checkbox"
+          id="shuffle"
+          checked={shuffle()}
+          onChange={toggleShuffle}
+        />
+        <label
+          for="shuffle"
+          style={{
+            "text-decoration": shuffle() ? "none" : "line-through",
+          }}
+          title="Shuffle cards based on rounds"
+        >
+          Shuffle is on
+        </label>
+      </div>
+      <h2>
+        Flash Cards (round {Math.round(words.length / cardsPerRound())}/
+        {Math.round(dbSize() / cardsPerRound())})
+      </h2>
       <div class={styles.roundOption}>
         <label for="cardsPerRound">Cards per round:&nbsp;</label>
         <select
@@ -186,6 +247,7 @@ const FlashCardsPage: Component = () => {
           <option value="50">50</option>
           <option value="full">Full</option>
         </select>
+        <p> / {dbSize()}</p>
       </div>
       <div class={styles.slider}>
         <Show when={!showResult()}>
@@ -222,18 +284,18 @@ const FlashCardsPage: Component = () => {
                     <SwiperSlide>
                       <Card
                         word={word}
-                        title={`${idx() + 1}/${
-                          isShowForgot() ? forgotIndexes().length : dbSize()
-                        }`}
+                        title={`${idx() + 1}/${list().length}`}
                         handleFlip={handleFlip}
                         toggleForgotBtn={toggleForgotBtn}
                         goNextCard={goNextCard}
                         goPrevCard={goPrevCard}
+                        id={!isShowForgot() ? idx() : forgotIndexes()[idx()]}
                       />
                     </SwiperSlide>
                   );
                 }}
               </For>
+              {/* we need this empty SwiperSlide to do some functions on last slide */}
               <SwiperSlide></SwiperSlide>
             </Swiper>
           </div>
@@ -262,7 +324,7 @@ const FlashCardsPage: Component = () => {
               <Show
                 when={words.length !== dbSize()}
                 fallback={
-                  <A href="/" style={{ color: "#b318f0" }}>
+                  <A href="/" class={styles.backToMenu}>
                     Back to menu
                   </A>
                 }

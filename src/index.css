@@ -1,3 +1,10 @@
+:root {
+  --main-bg-color: #282c34;
+  --text-color: #fff;
+  --link-color: #b318f0;
+  --card-color: #0e0e0e;
+}
+
 body {
   margin: 0;
   padding: 0;

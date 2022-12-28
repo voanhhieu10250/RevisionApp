@@ -1,18 +1,18 @@
 .App {
   text-align: center;
-  background-color: #282c34;
+  background-color: var(--main-bg-color);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: 24px;
-  color: white;
+  color: var(--text-color);
   min-height: 100vh;
   min-width: 300px;
 }
 
 .link {
-  color: #b318f0;
+  color: var(--link-color);
 }
 
 .backToMenu {
@@ -21,7 +21,7 @@
   top: 0;
   left: 0;
   padding: 0 10px;
-  color: #b318f0;
+  color: var(--link-color);
   text-decoration: none;
   font-size: 18px;
 }
@@ -29,56 +29,6 @@
 .menu {
   list-style: none;
   padding: 0;
-}
-.fileInput {
-  font-size: 18px;
-}
-
-.result {
-  h3 {
-    margin-bottom: 10px;
-  }
-}
-.datas {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px 20px;
-  justify-content: center;
-  width: 100%;
-  margin: 0;
-  padding: 20px 0;
-}
-
-.card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  transition: 0.3s;
-  padding: 2px 16px;
-  display: flex;
-  flex-direction: column;
-  background-color: #0e0e0e;
-  flex-basis: 15%;
-  h4 {
-    margin-top: 20px;
-    margin-bottom: 0;
-  }
-  p {
-    margin: 0;
-  }
-  small {
-    text-align: end;
-    font-size: medium;
-    padding-right: 10px;
-    padding-bottom: 10px;
-  }
-  hr {
-    width: 90%;
-    opacity: 0.1;
-  }
-}
-.card:hover {
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
 @media screen and (min-width: 768px) {
@@ -88,8 +38,5 @@
   .backToMenu {
     font-size: 20px;
     padding: 10px;
-  }
-  .card {
-    flex-basis: 20%;
   }
 }

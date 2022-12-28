@@ -226,7 +226,7 @@ class HashTable<K, V> {
     }
   }
 
-  // convert hash table to array
+  // convert hash table to array. If elementAmount is not specified, then return all elements.
   public toArray(
     startIndex?: number,
     elementAmount?: number

@@ -8,15 +8,15 @@ import saveListBg from "../assets/save-list-bg.svg";
 export type CardType = Word & {
   showDefi: boolean;
   isForgot: boolean;
-  _id: number;
 };
 type CardProps = {
-  handleFlip: (word: CardType, e: Event) => void;
-  toggleForgotBtn: (word: CardType) => void;
+  handleFlip: (id: number, e: Event) => void;
+  toggleForgotBtn: (id: number, e: Event) => void;
   goNextCard: () => void;
   goPrevCard: () => void;
   title: string;
   word: CardType;
+  id: number;
 };
 const Card: Component<CardProps> = ({
   handleFlip,
@@ -25,6 +25,7 @@ const Card: Component<CardProps> = ({
   word,
   goNextCard,
   goPrevCard,
+  id,
 }) => {
   return (
     <div class={styles.flipCard}>
@@ -33,7 +34,7 @@ const Card: Component<CardProps> = ({
           [styles.card]: true,
           [styles.rotateCard]: word.showDefi,
         }}
-        onClick={[handleFlip, word]}
+        onClick={[handleFlip, id]}
       >
         <div class={styles.cardInnerFront}>
           {/* card head */}
@@ -52,7 +53,7 @@ const Card: Component<CardProps> = ({
             </button>
             <button
               classList={{ [styles.forgotActive]: word.isForgot }}
-              onClick={[toggleForgotBtn, word]}
+              onClick={[toggleForgotBtn, id]}
               title="Didn't remember this word? Save it to review later"
             >
               <Show
@@ -85,7 +86,7 @@ const Card: Component<CardProps> = ({
             </button>
             <button
               classList={{ [styles.forgotActive]: word.isForgot }}
-              onClick={[toggleForgotBtn, word]}
+              onClick={[toggleForgotBtn, id]}
               title="Didn't remember this word? Save it to review later"
             >
               <Show

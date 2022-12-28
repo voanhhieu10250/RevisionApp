@@ -17,7 +17,7 @@
   transition: transform 0.6s;
   transform-style: preserve-3d;
 
-  background-color: #0e0e0e;
+  background-color: var(--card-color);
   border-radius: 10px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 
@@ -63,7 +63,7 @@
       position: absolute;
       right: 0;
       top: 0;
-      color: #ffffff;
+      color: var(--text-color);
       outline: none;
       background-color: inherit;
       border: none;
@@ -108,7 +108,7 @@
       }
     }
     .forgotActive {
-      color: #9c015b;
+      color: var(--link-color);
     }
   }
 }

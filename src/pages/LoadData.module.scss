@@ -1,0 +1,107 @@
+.result {
+  h3 {
+    margin-bottom: 10px;
+  }
+}
+.datas {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  justify-content: center;
+  width: 100%;
+  margin: 0;
+  padding: 20px 0;
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  padding: 2px 16px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--card-color);
+  flex-basis: 15%;
+  h4 {
+    margin-top: 20px;
+    margin-bottom: 0;
+  }
+  p {
+    margin: 0;
+  }
+  small {
+    text-align: end;
+    font-size: medium;
+    padding-right: 10px;
+    padding-bottom: 10px;
+  }
+  hr {
+    width: 90%;
+    opacity: 0.1;
+  }
+}
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+form {
+  text-align: center;
+  max-width: 230px;
+  margin: auto;
+
+  .inputFileContainer {
+    position: relative;
+  }
+  .inputFileTrigger {
+    display: block;
+    padding: 14px 45px;
+    background: #0e0e0e;
+    color: var(--text-color);
+    font-size: 18px;
+    transition: all 0.4s;
+    cursor: pointer;
+  }
+  .inputFile {
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 225px;
+    opacity: 0;
+    padding: 14px 0;
+    cursor: pointer;
+  }
+  .inputFile:hover + .inputFileTrigger,
+  .inputFile:focus + .inputFileTrigger,
+  .inputFileTrigger:hover,
+  .inputFileTrigger:focus {
+    background: var(--text-color);
+    color: var(--main-bg-color);
+  }
+
+  .fileReturn {
+    margin: 0;
+    font-size: 18px;
+  }
+  .fileReturn:not(:empty) {
+    margin: 1em 0;
+  }
+  .fileReturn {
+    font-style: italic;
+    font-weight: bold;
+  }
+  .fileReturn:not(:empty):before {
+    content: "Selected file: ";
+    font-style: normal;
+    font-weight: normal;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .card {
+    flex-basis: 20%;
+  }
+}
