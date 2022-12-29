@@ -89,6 +89,25 @@
     display: inline-block;
   }
 }
+.shuffleForgotten {
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 5px 10px;
+  color: var(--link-color);
+  font-size: 18px;
+  padding: 0;
+  background-color: inherit;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: 500ms;
+  &:hover {
+    text-decoration: underline;
+    color: var(--text-color);
+  }
+}
 
 @media screen and (min-width: 768px) {
   .container {
@@ -99,6 +118,9 @@
   .shuffle {
     font-size: 20px;
     margin: 10px;
+  }
+  .shuffleForgotten {
+    margin: 20px 0;
   }
 }
 

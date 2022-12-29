@@ -69,19 +69,20 @@ const FlashCardsPage: Component = () => {
       // If you want to use swiper events, you need to use createEffect
       swiper?.on("keyPress", (s, keyCode) => {
         if (s.isEnd && parseInt(keyCode) === 39) {
-          setIsShowForgot(false);
-          setShowResult(true);
+          batch(() => {
+            setIsShowForgot(false);
+            setShowResult(true);
+          });
         }
       });
     })
   );
 
-  // Update forgotWords when words change
+  // Update forgotWords right after the review round ends
   createEffect(
     on(
       isShowForgot,
       (isShowForgot) => {
-        // console.log("words change");
         if (!isShowForgot) {
           setForgotIndexes(
             forgotIndexes().filter((idx) => words[idx].isForgot)
@@ -96,6 +97,7 @@ const FlashCardsPage: Component = () => {
     on(
       shuffle,
       async (isShuffle) => {
+        if (isShowForgot()) return;
         const result = await window.electronAPI.getData(
           undefined,
           words.length,
@@ -104,7 +106,10 @@ const FlashCardsPage: Component = () => {
 
         if (isShuffle) shuffleArray(result);
 
-        setWords(result as CardType[]);
+        batch(() => {
+          setWords(result as CardType[]);
+          setForgotIndexes([]);
+        });
         swiper()?.update();
         // swiper()?.slideTo(0, 0);
       },
@@ -195,7 +200,7 @@ const FlashCardsPage: Component = () => {
     if (words.length >= 400) {
       if (
         confirm(
-          "This function is expensive on this amount of cards. Are you sure?"
+          "This function is expensive on this amount of cards. All forgotten cards will be reset. Are you sure?"
         )
       ) {
         (t.target as HTMLInputElement).checked = !shuffle();
@@ -204,33 +209,59 @@ const FlashCardsPage: Component = () => {
         (t.target as HTMLInputElement).checked = shuffle();
       }
     } else {
-      (t.target as HTMLInputElement).checked = !shuffle();
-      setShuffle((val) => !val);
+      if (forgotIndexes().length > 0) {
+        if (confirm("All forgotten cards will be reset. Are you sure?")) {
+          (t.target as HTMLInputElement).checked = !shuffle();
+          setShuffle((val) => !val);
+        } else {
+          (t.target as HTMLInputElement).checked = shuffle();
+        }
+      } else {
+        (t.target as HTMLInputElement).checked = !shuffle();
+        setShuffle((val) => !val);
+      }
     }
   };
-
+  const handleShuffleForgottenCards = () => {
+    const newList = forgotIndexes().splice(0);
+    shuffleArray(newList);
+    setForgotIndexes(newList);
+    swiper()?.update();
+  };
   const list = () =>
     !isShowForgot() ? words : forgotIndexes().map((idx) => words[idx]);
 
   return (
     <div class={styles.container}>
-      <div class={styles.shuffle}>
-        <input
-          type="checkbox"
-          id="shuffle"
-          checked={shuffle()}
-          onChange={toggleShuffle}
-        />
-        <label
-          for="shuffle"
-          style={{
-            "text-decoration": shuffle() ? "none" : "line-through",
-          }}
-          title="Shuffle cards based on rounds"
-        >
-          Shuffle is on
-        </label>
-      </div>
+      <Show
+        when={!isShowForgot()}
+        fallback={
+          <button
+            class={styles.shuffleForgotten}
+            onClick={handleShuffleForgottenCards}
+          >
+            Shuffle cards
+          </button>
+        }
+      >
+        <div class={styles.shuffle}>
+          <input
+            type="checkbox"
+            id="shuffle"
+            checked={shuffle()}
+            onChange={toggleShuffle}
+          />
+          <label
+            for="shuffle"
+            style={{
+              "text-decoration": shuffle() ? "none" : "line-through",
+            }}
+            title="Shuffle cards based on rounds"
+          >
+            Shuffle is on
+          </label>
+        </div>
+      </Show>
       <h2>
         Flash Cards (round {Math.round(words.length / cardsPerRound())}/
         {Math.round(dbSize() / cardsPerRound())})
