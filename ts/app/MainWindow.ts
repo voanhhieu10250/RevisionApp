@@ -9,7 +9,7 @@ class MainWindow extends BrowserWindow {
   private _dataFilename: string = "";
   private _dataFilePath: string = "";
 
-  constructor(filePath: string, preloadPath: string) {
+  constructor(filePath: string, preloadPath: string, iconPath: string) {
     super({
       width: 800,
       height: 600,
@@ -18,6 +18,7 @@ class MainWindow extends BrowserWindow {
       webPreferences: {
         preload: preloadPath,
       },
+      icon: iconPath,
     });
     this._uiFile = filePath;
     this.loadFile(this._uiFile);
