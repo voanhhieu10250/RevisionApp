@@ -14,11 +14,9 @@ When you're working on the client (solidjs), you just need to run `yarn start`, 
 
 2. `yarn make`
 
-3. remove all files from the out/make/.../x64 directory
+3. compile the package with Inno Setup Compiler (using the setup-script.iss file)
 
-4. compile the package with Inno Setup Compiler (using the setup-script.iss file)
-
-5. `yarn run publish`
+4. go to Github and create a new release
 
 ## Todo:
 

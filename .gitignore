@@ -3,5 +3,5 @@ node_modules
 /dist
 out/
 .env
-
+release/
 setup-script.iss
