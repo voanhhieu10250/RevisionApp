@@ -31,7 +31,7 @@ const isButton = (element: HTMLElement) => {
     el = el.parentNode as HTMLElement | null;
   return !!el;
 };
-function shuffleArray(array: any[]) {
+function shuffleArray(array: unknown[]) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
@@ -53,7 +53,7 @@ const FlashCardsPage: Component = () => {
 
   onMount(async () => {
     window.electronAPI.setTitle("Flash Cards");
-    let infodata = await window.electronAPI.getDataInfo();
+    const infodata = await window.electronAPI.getDataInfo();
     const result = await window.electronAPI.getData(
       undefined,
       cardsPerRound(),
@@ -184,7 +184,7 @@ const FlashCardsPage: Component = () => {
     swiper()?.slideTo(0, 0);
   };
   const handleNextRound = async () => {
-    let oldLength = words.length;
+    const oldLength = words.length;
     const result = await window.electronAPI.getData(
       words.length,
       cardsPerRound(),
@@ -214,6 +214,7 @@ const FlashCardsPage: Component = () => {
       setWords([id], "showDefi", (showDefi) => !showDefi);
     }
   };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const toggleForgotBtn = (id: number, _?: Event) => {
     batch(() => {
       if (!isShowForgot()) {

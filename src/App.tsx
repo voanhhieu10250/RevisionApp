@@ -14,12 +14,12 @@ const App: Component = () => {
   return (
     <div class={styles.App}>
       <header class={styles.header}>
-        <Show when={!Boolean(isMenu())}>
+        <Show when={!isMenu()}>
           <A href="/" class={styles.backToMenu}>
             Back to menu
           </A>
         </Show>
-        <Show when={!Boolean(isFlashCard())}>
+        <Show when={!isFlashCard()}>
           <h1>Revision App</h1>
         </Show>
       </header>

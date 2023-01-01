@@ -50,7 +50,7 @@ class HashTable<K, V> {
   // If load factor goes beyond threshold, then
   // increase hash-table capacity
   private rehash(): void {
-    let tempArray = this.hashNodes;
+    const tempArray = this.hashNodes;
 
     // double the current capacity and find the next prime number
     this.hashCapacity = this.nextPrime(2 * this.hashCapacity);
@@ -122,7 +122,7 @@ class HashTable<K, V> {
 
   // Adds a key-value pair to hash table
   public add(key: K, value: V): void {
-    let chainIndex = this.hash(
+    const chainIndex = this.hash(
       typeof key === "object" ? JSON.stringify(key) : new Object(key).toString()
     ); // Pass key to Hash Function
 
@@ -145,7 +145,7 @@ class HashTable<K, V> {
     curNode = this.hashNodes[chainIndex]; // get the head node in chain
 
     // Add a new HashNode to the top of the Chain (LinkedList)
-    let newNode: HashNode<K, V> = new HashNode(key, value);
+    const newNode: HashNode<K, V> = new HashNode(key, value);
     newNode.next = curNode;
     this.hashNodes[chainIndex] = newNode;
 
@@ -158,7 +158,7 @@ class HashTable<K, V> {
   // Return value of the element if success.
   // Return null if key is not found.
   public remove(key: K): V | undefined {
-    let chainIndex = this.hash(
+    const chainIndex = this.hash(
       typeof key === "object" ? JSON.stringify(key) : new Object(key).toString()
     ); // Pass key to Hash Function
 
@@ -197,7 +197,7 @@ class HashTable<K, V> {
 
   // Returns value for a key
   public get(key: K): V | undefined {
-    let bucketIndex = this.hash(
+    const bucketIndex = this.hash(
       typeof key === "object" ? JSON.stringify(key) : new Object(key).toString()
     );
 
@@ -231,7 +231,7 @@ class HashTable<K, V> {
     startIndex?: number,
     elementAmount?: number
   ): { key: K; value: V }[] {
-    let list: { key: K; value: V }[] = [];
+    const list: { key: K; value: V }[] = [];
     let idxCounter = 0;
 
     if (elementAmount) {
@@ -283,7 +283,7 @@ class HashTable<K, V> {
       return null;
     }
 
-    let result = this.hashNodes[index];
+    const result = this.hashNodes[index];
     return result;
   }
 

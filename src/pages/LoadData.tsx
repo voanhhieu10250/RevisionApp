@@ -15,18 +15,19 @@ export default function LoadDataPage() {
   });
 
   function handleFileSelect(evt: Event) {
-    let file = (evt.target as HTMLInputElement).files![0];
-    let reader = new FileReader();
+    const file = (evt.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
 
     console.log(file);
     reader.onprogress = function (this: FileReader, evt: ProgressEvent) {
       if (evt.lengthComputable) {
-        let percentComplete = (evt.loaded / evt.total) * 100;
+        const percentComplete = (evt.loaded / evt.total) * 100;
         setProgress(percentComplete);
       }
     };
     reader.onload = function (this: FileReader): void {
-      let text = this.result as string;
+      const text = this.result as string;
       let result: { text: string; definition: string }[] = [];
 
       if (text) {
@@ -34,7 +35,7 @@ export default function LoadDataPage() {
           .split("---")
           .filter((item) => item !== "")
           .map((item) => {
-            let obj = item.split("__defi__");
+            const obj = item.split("__defi__");
             return { text: obj[0].trim(), definition: obj[1].trim() };
           });
 
