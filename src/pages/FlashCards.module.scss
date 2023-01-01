@@ -9,7 +9,7 @@
 
   > h2 {
     font-size: 1.3em;
-    margin: 20px 0 0;
+    margin: 0;
   }
   .roundOption {
     display: flex;
@@ -76,12 +76,13 @@
   color: var(--link-color);
 }
 
-.shuffle {
+.shuffle,
+.defiFirst {
   display: flex;
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 0 10px;
+  position: relative;
+  // top: 0;
+  // right: 0;
+  margin: 0;
   color: var(--text-color);
   label,
   input {
@@ -91,10 +92,10 @@
 }
 .shuffleForgotten {
   display: flex;
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 5px 10px;
+  position: relative;
+  // top: 0;
+  // right: 0;
+  margin: 4px 10px;
   color: var(--link-color);
   font-size: 18px;
   padding: 0;
@@ -102,7 +103,7 @@
   border: none;
   outline: none;
   cursor: pointer;
-  transition: 500ms;
+  transition: color 200ms;
   &:hover {
     text-decoration: underline;
     color: var(--text-color);
@@ -116,11 +117,14 @@
     }
   }
   .shuffle {
+    margin-top: 10px;
+  }
+  .shuffle,
+  .defiFirst {
     font-size: 20px;
-    margin: 10px;
   }
   .shuffleForgotten {
-    margin: 20px 0;
+    margin: 4px;
   }
 }
 
@@ -139,7 +143,7 @@
   .slider .endRound .modal {
     height: 70%;
     width: calc(70% - 60px);
-    max-width: 1200px;
+    max-width: calc(1200px - 60px);
     max-height: 1000px;
   }
 }

@@ -6,7 +6,7 @@ app.whenReady().then(() => {
   let mainWindow = new MainWindow(
     "dist/index.html",
     path.join(__dirname, "preload.js"),
-    path.join(__dirname, "../src/assets/main-icon.svg")
+    path.join(__dirname, "../src/assets/main-icon.png")
   );
 
   if (process.env.NODE_ENV === "production") {
@@ -19,7 +19,7 @@ app.whenReady().then(() => {
       mainWindow = new MainWindow(
         "dist/index.html",
         path.join(__dirname, "preload.js"),
-        path.join(__dirname, "../src/assets/main-icon.svg")
+        path.join(__dirname, "../src/assets/main-icon.png")
       );
     }
   });
