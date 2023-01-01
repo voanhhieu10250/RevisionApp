@@ -6,7 +6,11 @@ module.exports = {
   makers: [
     {
       name: "@electron-forge/maker-squirrel",
-      config: {},
+      config: {
+        iconUrl:
+          "https://github.com/voanhhieu10250/RevisionApp/blob/master/src/renderer/assets/main-icon.png?raw=true",
+        setupIcon: "./src/renderer/assets/main-icon.ico",
+      },
     },
     {
       name: "@electron-forge/maker-zip",
@@ -14,7 +18,9 @@ module.exports = {
     },
     {
       name: "@electron-forge/maker-deb",
-      config: {},
+      config: {
+        icon: "./src/renderer/assets/main-icon.png",
+      },
     },
     {
       name: "@electron-forge/maker-rpm",

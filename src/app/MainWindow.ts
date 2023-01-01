@@ -1,13 +1,14 @@
 import { BrowserWindow, app, ipcMain } from "electron";
 import HashTable from "../utils/HashTable";
 
+const isDev = process.env.NODE_ENV === "development";
 class MainWindow extends BrowserWindow {
   private _uiFile: string;
   private _data: HashTable<string, string>;
-  private _isDataChanged: boolean = false;
+  private _isDataChanged = false;
   private _keys: string[] = [];
-  private _dataFilename: string = "";
-  private _dataFilePath: string = "";
+  private _dataFilename = "";
+  private _dataFilePath = "";
 
   constructor(filePath: string, preloadPath: string, iconPath: string) {
     super({
@@ -21,7 +22,12 @@ class MainWindow extends BrowserWindow {
       icon: iconPath,
     });
     this._uiFile = filePath;
-    this.loadFile(this._uiFile);
+    if (isDev) {
+      this.loadURL(this._uiFile);
+      this.webContents.openDevTools();
+    } else {
+      this.loadFile(this._uiFile);
+    }
     this._data = new HashTable<string, string>();
 
     this.on("closed", () => app.quit());
@@ -57,14 +63,14 @@ class MainWindow extends BrowserWindow {
       (_, start?: number, perPage?: number, addOnProps?: object) => {
         const result: Word[] = [];
         const props = addOnProps || {};
-        let startIdx = start || 0;
-        let perPageIdx =
+        const startIdx = start || 0;
+        const perPageIdx =
           perPage && perPage <= this._data.size ? perPage : this._data.size;
 
         for (let i = startIdx; i < perPageIdx + startIdx; i++) {
           result.push({
             text: this._keys[i],
-            definition: this._data.get(this._keys[i])!,
+            definition: this._data.get(this._keys[i]) || "",
             ...props,
           });
         }
@@ -72,8 +78,6 @@ class MainWindow extends BrowserWindow {
       }
     );
   }
-
-  _loadData(): void {}
 }
 
 export default MainWindow;

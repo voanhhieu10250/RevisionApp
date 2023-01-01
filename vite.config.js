@@ -1,6 +1,5 @@
 import { defineConfig } from "vite";
 import solidPlugin from "vite-plugin-solid";
-import path from "path";
 
 export default defineConfig({
   root: "./src/renderer",
@@ -10,8 +9,15 @@ export default defineConfig({
   },
   build: {
     target: "esnext",
-    outDir: path.resolve(__dirname, "dist"),
-    emptyOutDir: false,
+    outDir: "dist/renderer",
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        dir: "./dist/renderer",
+        entryFileNames: "[name].[hash].js",
+        assetFileNames: "assets/[name].[ext]",
+      },
+    },
   },
   // fix for assets import in index.html
   experimental: {
