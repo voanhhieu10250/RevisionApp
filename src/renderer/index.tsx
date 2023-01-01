@@ -1,4 +1,5 @@
 /* @refresh reload */
+/*eslint import/no-unresolved: [2, { ignore: ['swiper/'] }]*/
 import { render } from "solid-js/web";
 import { hashIntegration, Router } from "@solidjs/router";
 

@@ -10,7 +10,7 @@ export default function MenuPage() {
 
   onMount(async () => {
     window.electronAPI.setTitle("Menu");
-    let info = await window.electronAPI.getDataInfo();
+    const info = await window.electronAPI.getDataInfo();
     setDataInfo(info);
   });
 
