@@ -5,14 +5,14 @@
   "description": "A revision app for students to revise for exams",
   "main": "dist/main.js",
   "scripts": {
-    "build": "env-cmd -e production yarn client:build && tsc",
+    "build": "env-cmd -e production tsc && yarn client:build ",
     "dev": "env-cmd -e development concurrently -k \"tsc -w\" \"yarn client:dev\" \"yarn electron:start\"",
     "client:dev": "vite",
     "client:build": "vite build",
     "client:preview": "vite preview",
     "electron:start": "env-cmd -e development concurrently -k \"tsc -w\" \"electron-forge start\"",
     "electron:package": "env-cmd -e production electron-forge package",
-    "electron:make": "env-cmd -e production electron-forge make",
+    "make": "env-cmd -e production electron-forge make",
     "publish": "env-cmd -e production electron-forge publish",
     "lint": "eslint --ext .ts,.tsx ."
   },

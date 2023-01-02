@@ -40,7 +40,9 @@ const Card: Component<CardProps> = ({
           {/* card head */}
           <div class={styles.cardHeader}>
             <small>{title}</small>
-            <button class={styles.edit}>Edit</button>
+            <button class={styles.edit} tabIndex={-1}>
+              Edit
+            </button>
           </div>
           {/* card body */}
           <div class={styles.cardBody}>
@@ -48,13 +50,14 @@ const Card: Component<CardProps> = ({
           </div>
           {/* card food */}
           <div class={styles.cardFooder}>
-            <button onClick={goPrevCard}>
+            <button onClick={goPrevCard} tabIndex={-1}>
               <img src={leftArrow} alt="Go back" />
             </button>
             <button
               classList={{ [styles.forgotActive]: word.isForgot }}
               onClick={[toggleForgotBtn, id]}
               title="Didn't remember this word? Save it to review later"
+              tabIndex={-1}
             >
               <Show
                 when={word.isForgot}
@@ -63,7 +66,7 @@ const Card: Component<CardProps> = ({
                 <img src={saveListBg} alt="Unsave from review later list" />
               </Show>
             </button>
-            <button onClick={goNextCard}>
+            <button onClick={goNextCard} tabIndex={-1}>
               <img src={rightArrow} alt="Go next" />
             </button>
           </div>
@@ -73,7 +76,9 @@ const Card: Component<CardProps> = ({
           {/* card head */}
           <div class={styles.cardHeader}>
             <small>{title}</small>
-            <button class={styles.edit}>Edit</button>
+            <button class={styles.edit} tabIndex={-1}>
+              Edit
+            </button>
           </div>
           {/* card body */}
           <div class={styles.cardBody}>
@@ -81,13 +86,14 @@ const Card: Component<CardProps> = ({
           </div>
           {/* card food */}
           <div class={styles.cardFooder}>
-            <button onClick={goPrevCard}>
+            <button onClick={goPrevCard} tabIndex={-1}>
               <img src={leftArrow} alt="Go back" />
             </button>
             <button
               classList={{ [styles.forgotActive]: word.isForgot }}
               onClick={[toggleForgotBtn, id]}
               title="Didn't remember this word? Save it to review later"
+              tabIndex={-1}
             >
               <Show
                 when={word.isForgot}
@@ -96,7 +102,7 @@ const Card: Component<CardProps> = ({
                 <img src={saveListBg} alt="Unsave from review later list" />
               </Show>
             </button>
-            <button onClick={goNextCard}>
+            <button onClick={goNextCard} tabIndex={-1}>
               <img src={rightArrow} alt="Go next" />
             </button>
           </div>

@@ -325,6 +325,7 @@ const FlashCardsPage: Component = () => {
           name="cardPerRound"
           title="Card per round"
           onChange={handleCardPerRoundChange}
+          tabIndex={-1}
         >
           <option value="20">20</option>
           <option value="30">30</option>
@@ -337,6 +338,7 @@ const FlashCardsPage: Component = () => {
         <Show when={!isShowResult()}>
           <div class={styles.slides}>
             <Swiper
+              tabIndex={-1}
               modules={[Navigation, EffectCreative, Keyboard]}
               initialSlide={0}
               keyboard={{
@@ -399,23 +401,30 @@ const FlashCardsPage: Component = () => {
                     {(id) => <li>{words[id].text}</li>}
                   </For>
                 </ul>
-                <button onClick={handleReviewForgot}>
-                  Review forgotten cards
-                </button>
-                <button onClick={handleRemoveForgotCards}>
-                  Remove all forgotten cards
-                </button>
               </Show>
-              <Show
-                when={words.length !== dbSize()}
-                fallback={
-                  <A href="/" class={styles.backToMenu}>
-                    Back to menu
-                  </A>
-                }
-              >
-                <button onClick={handleNextRound}>Next round</button>
-              </Show>
+              <div class={styles.buttons}>
+                <Show
+                  when={forgotIndexes().length > 0}
+                  fallback={<p>Good Job!</p>}
+                >
+                  <button onClick={handleReviewForgot}>
+                    Review forgotten cards
+                  </button>
+                  <button onClick={handleRemoveForgotCards}>
+                    Remove all forgotten cards
+                  </button>
+                </Show>
+                <Show
+                  when={words.length !== dbSize()}
+                  fallback={
+                    <A href="/" class={styles.backToMenu}>
+                      Back to menu
+                    </A>
+                  }
+                >
+                  <button onClick={handleNextRound}>Next round</button>
+                </Show>
+              </div>
             </div>
           </div>
         </Show>
