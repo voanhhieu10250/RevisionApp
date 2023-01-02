@@ -68,6 +68,7 @@ class MainWindow extends BrowserWindow {
           perPage && perPage <= this._data.size ? perPage : this._data.size;
 
         for (let i = startIdx; i < perPageIdx + startIdx; i++) {
+          if (!this._keys[i]) break;
           result.push({
             text: this._keys[i],
             definition: this._data.get(this._keys[i]) || "",

@@ -403,10 +403,7 @@ const FlashCardsPage: Component = () => {
                 </ul>
               </Show>
               <div class={styles.buttons}>
-                <Show
-                  when={forgotIndexes().length > 0}
-                  fallback={<p>Good Job!</p>}
-                >
+                <Show when={forgotIndexes().length > 0}>
                   <button onClick={handleReviewForgot}>
                     Review forgotten cards
                   </button>
