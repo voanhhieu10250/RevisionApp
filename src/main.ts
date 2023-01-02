@@ -33,7 +33,7 @@ app.whenReady().then(() => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let mainWindow = new MainWindow(loadURL, preloadURL, mainIconURL);
 
-  if (process.env.NODE_ENV === "production") {
+  if (!isDev) {
     const menu = Menu.buildFromTemplate(menuTemplate);
     Menu.setApplicationMenu(menu);
   }
