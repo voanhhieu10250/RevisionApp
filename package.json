@@ -5,7 +5,7 @@
   "description": "A revision app for students to revise for exams",
   "main": "dist/main.js",
   "scripts": {
-    "build": "env-cmd -e production tsc && yarn client:build ",
+    "build": "env-cmd -e production tsc && yarn client:build",
     "dev": "env-cmd -e development concurrently -k \"tsc -w\" \"yarn client:dev\" \"yarn electron:start\"",
     "client:dev": "vite",
     "client:build": "vite build",

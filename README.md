@@ -1,12 +1,23 @@
 ## Start
 
-Before you start the application, make sure you have compiled all the typescript files.
+Create a .env-cmdrc file in the root directory with the following contents:
 
-When you're working on the server (electron), you need to compile the typescript every time you make a change:
+```
+{
+  "development": {
+    "NODE_ENV": "development"
+  },
+  "test": {
+    "NODE_ENV": "test"
+  },
+  "production": {
+    "NODE_ENV": "production"
+  }
+}
 
-Run `tsc` and then run `yarn start` to start the Electron application.
+```
 
-When you're working on the client (solidjs), you just need to run `yarn start`, Vite will automatically update the app client when everytime the client's code changes.
+Then run `yarn dev`
 
 ## Build and Publish
 
